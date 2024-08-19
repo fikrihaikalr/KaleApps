@@ -30,8 +30,8 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentHomeBinding.inflate(inflater,container,false)
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -48,52 +48,17 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initAdapter() {
-        nowAdapter = MovieAdapter {
-            findNavController().navigate(
-                R.id.action_homeFragment_to_detailFragment,
-                Bundle().apply { putParcelable(DetailFragment.EXTRA_MOVIE, it) })
-        }
-        popularAdapter = MovieAdapter {
-            findNavController().navigate(
-                R.id.action_homeFragment_to_detailFragment,
-                Bundle().apply { putParcelable(DetailFragment.EXTRA_MOVIE, it) })
-        }
-        topAdapter = MovieAdapter {
-            findNavController().navigate(
-                R.id.action_homeFragment_to_detailFragment,
-                Bundle().apply { putParcelable(DetailFragment.EXTRA_MOVIE, it) })
-        }
-        binding.rvMovieNowPlaying.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = nowAdapter
-        }
-        binding.rvMoviePopular.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = popularAdapter
-        }
-        binding.rvMovieTopRated.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = topAdapter
-        }
-    }
-
     private fun observeData() {
-        viewModel.getMovieNow.observe(viewLifecycleOwner){
-            when(it){
-                is Resource.Loading ->{
+        viewModel.getMovieNow.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
                     binding.apply {
                         rvMovieNowPlaying.visibility = View.GONE
                         pb.visibility = View.VISIBLE
                         error.tvError.visibility = View.GONE
                     }
                 }
+
                 is Resource.Success -> {
                     binding.apply {
                         rvMovieNowPlaying.visibility = View.VISIBLE
@@ -102,6 +67,7 @@ class HomeFragment : Fragment() {
                     }
                     nowAdapter.differ.submitList(it.data)
                 }
+
                 is Resource.Error -> {
                     binding.apply {
                         rvMovieTopRated.visibility = View.GONE
@@ -169,5 +135,44 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun initAdapter() {
+        nowAdapter = MovieAdapter {
+            findNavController().navigate(
+                R.id.action_homeFragment_to_detailFragment,
+                Bundle().apply { putParcelable(DetailFragment.EXTRA_MOVIE, it) })
+        }
+        popularAdapter = MovieAdapter {
+            findNavController().navigate(
+                R.id.action_homeFragment_to_detailFragment,
+                Bundle().apply { putParcelable(DetailFragment.EXTRA_MOVIE, it) })
+        }
+        topAdapter = MovieAdapter {
+            findNavController().navigate(
+                R.id.action_homeFragment_to_detailFragment,
+                Bundle().apply { putParcelable(DetailFragment.EXTRA_MOVIE, it) })
+        }
+        binding.rvMovieNowPlaying.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = nowAdapter
+        }
+        binding.rvMoviePopular.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = popularAdapter
+        }
+        binding.rvMovieTopRated.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = topAdapter
+        }
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

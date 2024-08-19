@@ -1,5 +1,6 @@
 package com.example.core.data.source.remote
 
+import android.util.Log
 import com.example.core.data.source.remote.network.ApiResponse
 import com.example.core.data.source.remote.network.ApiService
 import com.example.core.data.source.remote.response.GetMovieResponse
@@ -12,18 +13,19 @@ import javax.inject.Singleton
 
 @Singleton
 class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
-    suspend fun getMovieNowPlaying(): kotlinx.coroutines.flow.Flow<ApiResponse<GetMovieResponse>> {
+    suspend fun getMovieNowPlaying(): Flow<ApiResponse<GetMovieResponse>> {
         return flow {
             try {
                 val response = apiService.getMovieNowPlaying()
                 emit(ApiResponse.Success(response))
             } catch (e: Exception) {
                 emit(ApiResponse.Error(e.toString()))
+                Log.e("RemoteDataSource", e.toString())
             }
         }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun getMoviePopular(): kotlinx.coroutines.flow.Flow<ApiResponse<GetMovieResponse>> {
+    suspend fun getMoviePopular(): Flow<ApiResponse<GetMovieResponse>> {
         return flow {
             try {
                 val response = apiService.getMoviePopular()
@@ -34,7 +36,7 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
         }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun getMovieTopRated(): kotlinx.coroutines.flow.Flow<ApiResponse<GetMovieResponse>> {
+    suspend fun getMovieTopRated(): Flow<ApiResponse<GetMovieResponse>> {
         return flow {
             try {
                 val response = apiService.getMovieTopRated()

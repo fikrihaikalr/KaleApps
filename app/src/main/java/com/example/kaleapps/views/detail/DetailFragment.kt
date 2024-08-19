@@ -27,15 +27,15 @@ class DetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentDetailBinding.inflate(inflater,container,false)
+    ): View {
+        _binding = FragmentDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val movie = arguments?.getParcelable<Movie>(EXTRA_MOVIE)
-        if (movie != null){
+        if (movie != null) {
             detailMovie = movie
         }
         binding.apply {
@@ -47,35 +47,36 @@ class DetailFragment : Fragment() {
             }
         }
         movie?.id?.let {
-            viewModel.getFavoriteState(it).observe(viewLifecycleOwner){ fav ->
+            viewModel.getFavoriteState(it).observe(viewLifecycleOwner) { fav ->
                 binding.fabAddFav.apply {
-                    if (fav == true){
+                    if (fav == true) {
                         setImageResource(R.drawable.baseline_favorite_24)
-                    }else{
+                    } else {
                         setImageResource(R.drawable.baseline_favorite_border_24)
                     }
                     isFavorite = fav
                 }
             }
         }
-        fabFavorite()
+        fabFavoriteOnClick()
     }
 
-    private fun fabFavorite() {
+    private fun fabFavoriteOnClick() {
         binding.fabAddFav.apply {
-            setOnClickListener{
-                if (!isFavorite){
+            setOnClickListener {
+                isFavorite = if (!isFavorite) {
                     viewModel.insertFavorite(detailMovie)
                     setImageResource(R.drawable.baseline_favorite_24)
-                    isFavorite = true
-                }else{
+                    true
+                } else {
                     viewModel.deleteFavorite(detailMovie)
                     setImageResource(R.drawable.baseline_favorite_border_24)
-                    isFavorite = true
+                    true
                 }
             }
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -23,6 +23,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -34,11 +38,12 @@ android {
     buildFeatures{
         viewBinding true
     }
+    buildToolsVersion '33.0.0'
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     testImplementation 'junit:junit:4.13.2'
@@ -60,7 +65,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
     implementation "androidx.room:room-ktx:$room_version"
-
+    implementation "net.zetetic:android-database-sqlcipher:4.4.0"
+    implementation "androidx.sqlite:sqlite-ktx:2.3.1"
     api "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     api "androidx.activity:activity-ktx:$activity_ktx_version"
     api "androidx.fragment:fragment-ktx:$fragment_ktx_version"

@@ -22,9 +22,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
 class FavoriteFragment : Fragment() {
+
     @Inject
     lateinit var factory: ViewModelFactory
-    private val viewModel: FavoriteViewModel by viewModels{
+
+    private val viewModel: FavoriteViewModel by viewModels {
         factory
     }
     private var _binding: FragmentFavoriteBinding? = null
@@ -46,41 +48,40 @@ class FavoriteFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentFavoriteBinding.inflate(inflater,container,false)
+    ): View {
+        // Inflate the layout for this fragment
+        _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        backToHome()
+        back()
         movieAdapter = MovieAdapter {
             findNavController().navigate(
                 com.example.kaleapps.R.id.action_favoriteFragment_to_detailFragment,
                 Bundle().apply {
-                    putParcelable(DetailFragment.EXTRA_MOVIE,it)
-                }
-            )
+                    putParcelable(DetailFragment.EXTRA_MOVIE, it)
+                })
         }
-
         binding.rvFav.apply {
             adapter = movieAdapter
-            layoutManager = GridLayoutManager(requireContext(),2)
+            layoutManager = GridLayoutManager(requireContext(), 3)
             setHasFixedSize(true)
         }
-        viewModel.getFavorite.observe(viewLifecycleOwner){
+        viewModel.getFavorite.observe(viewLifecycleOwner) {
             movieAdapter.differ.submitList(it)
             if (it.isNotEmpty()){
                 binding.rvFav.visibility = View.VISIBLE
                 binding.empty.tvEmpty.visibility = View.GONE
-            }else{
+            } else {
                 binding.rvFav.visibility = View.GONE
                 binding.empty.tvEmpty.visibility = View.VISIBLE
             }
         }
     }
 
-    private fun backToHome() {
+    private fun back() {
         binding.back.setOnClickListener {
             it.findNavController().popBackStack()
         }

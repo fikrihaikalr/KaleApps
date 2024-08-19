@@ -10,9 +10,10 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class AppModule{
+abstract class AppModule {
 
     @Binds
     @Singleton
     abstract fun provideMovieUseCase(movieInteractor: MovieInteractor): MovieUseCase
+
 }

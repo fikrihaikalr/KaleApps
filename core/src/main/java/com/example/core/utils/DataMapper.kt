@@ -46,4 +46,5 @@ object DataMapper {
                 it.isFavorite
             )
         }
+
 }
